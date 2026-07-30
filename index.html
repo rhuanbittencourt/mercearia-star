@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercearia Star - Sua Loja Online</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: #33322D;
+            color: #333;
+            /* Espaço para garantir que o último produto não fique coberto pelo painel do rodapé */
+            padding-bottom: 160px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        header {
+            background:#FFD21D;
+            color: #33322D;
+            text-align: center;
+            padding: 30px 15px;
+            border-bottom-left-radius: 20px;
+            border-bottom-right-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            margin-bottom: 25px;
+           
+        }
+
+        header h1 {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 1.8rem;
+            opacity: 0.7;
+        }
+
+        .categorias-nav {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            scrollbar-width: thin;
+        }
+
+        .categorias-nav::-webkit-scrollbar {
+            height: 4px;
+        }
+
+        .categorias-nav::-webkit-scrollbar-thumb {
+            background: #cbd5e0;
+            border-radius: 4px;
+        }
+
+        .btn-categoria {
+            background: #FFD21D;
+            border: 2px solid #e2e8f0;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #33322D;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+        }
+
+        .btn-categoria:hover {
+            border-color: #000000;
+            color: #000;
+        }
+
+        .btn-categoria.ativo {
+            background: #33322D;
+            color: white;
+            border-color: #FFD21D;
+            box-shadow: 0 4px 10px rgba(31, 180, 88, 0.3);
+        }
+
+        .secao-categoria {
+            margin-bottom: 35px;
+        }
+
+        .titulo-categoria {
+            font-size: 1.4rem;
+            color: #2d3748;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .produtos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #edf2f7;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- ESTILOS PARA PRODUTOS INDISPONÍVEIS / ESGOTADOS --- */
+        .card.indisponivel {
+            opacity: 0.65;
+            filter: grayscale(85%);
+            position: relative;
+        }
+
+        .selo-esgotado {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .info-estoque {
+            font-size: 0.8rem;
+            color: #718096;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .info-estoque.alerta {
+            color: #e53e3e;
+        }
+
+        /* PAINEL DE EDICAO DE ESTOQUE PELO USUÁRIO/ADMIN */
+        .controle-estoque-admin {
+            display: none;
+            background: #edf2f7;
+            padding: 8px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            text-align: center;
+            border: 1px dashed #cbd5e0;
+        }
+
+        .modo-admin-ativo .controle-estoque-admin {
+            display: block;
+        }
+
+        .btn-admin-estoque {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 2px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin: 0 4px;
+        }
+
+        .btn-admin-estoque:hover {
+            background: #2d3748;
+        }
+
+        .btn-toggle-admin {
+            background: #4a5568;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-toggle-admin:hover {
+            background: #2d3748;
+        }
+
+        /* --- MODAL DE SENHA DO ADMIN --- */
+        .modal-admin {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            padding: 15px;
+        }
+
+        .modal-conteudo {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 350px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .modal-conteudo h3 {
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+
+        .modal-conteudo input {
+            width: 100%;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            text-align: center;
+            outline: none;
+        }
+
+        .modal-conteudo input:focus {
+            border-color: #1fb458;
+        }
+
+        .modal-botoes {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-modal {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .btn-modal.confirmar { background: #1fb458; color: white; }
+        .btn-modal.cancelar { background: #e2e8f0; color: #4a5568; }
+
+        .card .img-container {
+            position: relative;
+            width: 100%;
+            height: 180px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background: #f7fafc;
+        }
+
+        .card .info {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: space-between;
+        }
+
+        .card .nome {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 8px;
+        }
+
+        .card .preco {
+            font-size: 1.2rem;
+            color: #11813d;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .card .controle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f7fafc;
+            padding: 6px 12px;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .card .controle button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #007bff;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card .controle button:hover {
+            background: #0056b3;
+        }
+
+        .card .controle button:active {
+            transform: scale(0.95);
+        }
+
+        .card .quantidade {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #2d3748;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .resumo {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 9999; /* Z-index elevado para ficar sobre todos os elementos */
+            background: #ffffff;
+            padding: 15px 20px;
+            border-radius: 20px 20px 0 0;
+            box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.15);
+            border-top: 4px solid #25D366;
+            transition: all 0.3s ease;
+        }
+
+        .resumo-conteudo {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .resumo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .resumo h2 {
+            font-size: 1.25rem;
+            color: #2d3748;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .resumo-acoes-topo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .total-destaque {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #11813d;
+        }
+
+        .badge-itens {
+            background: #1fb458;
+            color: white;
+            font-size: 0.85rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .btn-toggle-carrinho {
+            background: #edf2f7;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #4a5568;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-toggle-carrinho:hover {
+            background: #e2e8f0;
+        }
+
+        .lista-pedido-container {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-bottom: 12px;
+            border-top: 1px solid #edf2f7;
+            padding-top: 10px;
+        }
+
+        /* Oculta a lista quando recolhido */
+        .resumo.recolhido .lista-pedido-container {
+            display: none;
+        }
+
+        .item-carrinho {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #e2e8f0;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .btn-whatsapp {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            background: #FFD21D;
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+        }
+
+        .btn-whatsapp:hover {
+            background: #1fb458;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .produtos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+
+            .card img {
+                height: 130px;
+            }
+
+            .card .nome {
+                font-size: 0.95rem;
+            }
+
+            .card .preco {
+                font-size: 1.05rem;
+            }
+
+            .resumo h2 {
+                font-size: 1.1rem;
+            }
+
+            .total-destaque {
+                font-size: 1.1rem;
+            }
+        }
+
+        .notificacao {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: #e74c3c;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            font-weight: bold;
+            display: none;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- CABEÇALHO DO SITE -->
+    <header>
+        <h1 onclick="contarCliquesTitulo()" style="cursor: pointer; user-select: none;">🍫 Mercearia Star</h1>
+        <p>Faça seu pedido que levo até você!</p>
+        <!-- O botão por padrão inicia Oculto (display: none) -->
+        <button id="btnAdminHeader" class="btn-toggle-admin" style="display: none;" onclick="toggleModoEstoque()">⚙️ Gerenciar Estoque</button>
+    </header>
+
+    <div class="container" id="containerPrincipal">
+
+        <!-- BOTÕES DE FILTRO POR CATEGORIA -->
+        <nav class="categorias-nav" id="botoesCategorias">
+            <!-- Gerado via JavaScript -->
+        </nav>
+
+        <!-- ÁREA ONDE OS PRODUTOS APARECEM SEPARADOS POR CATEGORIA -->
+        <main id="containerProdutos"></main>
+
+        <!-- RESUMO DO PEDIDO DO CLIENTE (FIXO E FLUTUANTE NO RODAPÉ) -->
+        <section class="resumo recolhido" id="painelResumo">
+            <div class="resumo-conteudo">
+                <div class="resumo-header">
+                    <h2>
+                        🛒 Seu Pedido 
+                        <span class="badge-itens" id="badgeQtdItens">0 itens</span>
+                    </h2>
+                    
+                    <div class="resumo-acoes-topo">
+                        <div class="total-destaque" id="totalPedido">
+                            Total: R$ 0,00
+                        </div>
+                        <button class="btn-toggle-carrinho" id="btnToggleCarrinho" onclick="toggleCarrinho()">
+                            Ver Itens ▲
+                        </button>
+                    </div>
+                </div>
+
+                <div class="lista-pedido-container">
+                    <div id="listaPedido">
+                        <p style="color: #888;">Nenhum item selecionado ainda.</p>
+                    </div>
+                </div>
+
+                <button class="btn-whatsapp" onclick="enviarWhatsApp()">
+                    📲 Enviar Pedido no WhatsApp
+                </button>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- CAIXA DE NOTIFICAÇÃO QUANDO NENHUM ITEM FOI SELECIONADO -->
+    <div id="notificacao" class="notificacao">
+        ⚠️ Selecione pelo menos um produto antes de enviar!
+    </div>
+
+    <!-- MODAL DE SENHA ADMINISTRATIVA -->
+    <div id="modalAdmin" class="modal-admin">
+        <div class="modal-conteudo">
+            <h3>🔐 Área do Proprietário</h3>
+            <p style="font-size: 0.85rem; color: #666;">Digite sua senha para acessar o painel de estoque:</p>
+            <input type="password" id="inputSenhaAdmin" placeholder="Digite sua senha" onkeypress="tratarTeclaSenha(event)">
+            <div class="modal-botoes">
+                <button class="btn-modal cancelar" onclick="fecharModalAdmin()">Cancelar</button>
+                <button class="btn-modal confirmar" onclick="validarSenhaAdmin()">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* ========================================================
+           GUIA DE EDIÇÃO DA SUA LOJA:
+           
+           1. MUDAR A SENHA ADMINISTRATIVA:
+              Altere a variável 'senhaAdmin' para a senha que desejar.
+           
+           2. MUDAR O NÚMERO DO WHATSAPP:
+              Altere a variável 'numeroWhatsApp' abaixo com seu DDD.
+
+           3. GERENCIAR CATEGORIAS E PRODUTOS:
+              Adicione ou remova itens na lista 'produtos' alterando o 'estoque'.
+           ======================================================== */
+
+        const numeroWhatsApp = "5522988098858";
+        const senhaAdmin = "1234"; // ⬅️ SUA SENHA DE ACESSO AQUI
+
+        const categoriasDisponiveis = [
+            "Todos",
+            "Barras de Chocolate",
+            "Amendoins",
+            "Balas e Chicletes",
+            "Bebidas e Outros"
+        ];
+
+        // Lista de produtos com quantidade em ESTOQUE individual
+        const produtos = [
+            // --- BARRAS DE CHOCOLATE ---
+            { id: 0, categoria: "Barras de Chocolate", nome: "Sonho de Valsa", preco: 12.00, estoque: 10, imagem: "imagens/sonho-de-valsa.jpg" },
+            { id: 1, categoria: "Barras de Chocolate", nome: "Diamante Negro", preco: 12.00, estoque: 5, imagem: "imagens/diamante.jpg" },
+            { id: 2, categoria: "Barras de Chocolate", nome: "Prestígio", preco: 12.00, estoque: 0, imagem: "imagens/prestigio.png" }, // Teste de estoque 0 (Indisponível)
+            { id: 3, categoria: "Barras de Chocolate", nome: "Ao Leite", preco: 12.00, estoque: 8, imagem: "imagens/ao-leite.jpg" },
+            { id: 4, categoria: "Barras de Chocolate", nome: "Meio Amargo", preco: 12.00, estoque: 15, imagem: "imagens/amargo.jpg" },
+            { id: 5, categoria: "Barras de Chocolate", nome: "Negresco", preco: 12.00, estoque: 2, imagem: "imagens/negresco.jpg" },
+            { id: 6, categoria: "Barras de Chocolate", nome: "Cajú com Passas", preco: 12.00, estoque: 0, imagem: "imagens/caju-passas.jpg" },
+            { id: 7, categoria: "Barras de Chocolate", nome: "Cajú", preco: 12.00, estoque: 6, imagem: "imagens/caju.jpg" },
+
+            // --- AMENDOINS ---
+            { id: 8, categoria: "Amendoins", nome: "Amendoim Japones 150g", preco: 5.50, estoque: 20, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Japones" },
+            { id: 9, categoria: "Amendoins", nome: "Amendoim Salgado 100g", preco: 4.50, estoque: 12, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Salgado" },
+            { id: 10, categoria: "Amendoins", nome: "Amendoim Doce Crocante", preco: 5.00, estoque: 0, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Doce" },
+
+            // --- BALAS E CHICLETES ---
+            { id: 11, categoria: "Balas e Chicletes", nome: "Halls Extra Forte", preco: 2.50, estoque: 30, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Extra+Forte" },
+            { id: 12, categoria: "Balas e Chicletes", nome: "Halls Menta", preco: 2.50, estoque: 25, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Menta" },
+            { id: 13, categoria: "Balas e Chicletes", nome: "Trident Menta", preco: 3.50, estoque: 15, imagem: "https://placehold.co/300x220/17a2b8/ffffff?text=Trident+Menta" },
+            { id: 14, categoria: "Balas e Chicletes", nome: "Trident Melancia", preco: 3.50, estoque: 0, imagem: "https://placehold.co/300x220/e83e8c/ffffff?text=Trident+Melancia" },
+
+            // --- BEBIDAS E OUTROS ---
+            { id: 15, categoria: "Bebidas e Outros", nome: "Refrigerante Caçulinha", preco: 3.50, estoque: 10, imagem: "https://placehold.co/300x220/dc3545/ffffff?text=Refrigerante" },
+            { id: 16, categoria: "Bebidas e Outros", nome: "Água Mineral 500ml", preco: 2.50, estoque: 18, imagem: "https://placehold.co/300x220/17a2b8/ffffff?text=Agua+Mineral" }
+        ];
+
+        let carrinho = {};
+        let categoriaFiltroAtual = "Todos";
+        let modoGerenciarEstoque = false;
+        let cliquesTitulo = 0;
+        let timerCliques = null;
+
+        // Inicializa contadores zerados no carrinho
+        produtos.forEach(p => carrinho[p.id] = 0);
+
+        // FUNÇÃO DE SEGURANÇA: Conta 3 toques rápidos no título do cabeçalho
+        function contarCliquesTitulo() {
+            cliquesTitulo++;
+            if (timerCliques) clearTimeout(timerCliques);
+
+            timerCliques = setTimeout(() => {
+                cliquesTitulo = 0;
+            }, 1200);
+
+            if (cliquesTitulo >= 3) {
+                cliquesTitulo = 0;
+                abrirModalOuAlternarEstoque();
+            }
+        }
+
+        function abrirModalOuAlternarEstoque() {
+            // Se já autenticou antes neste navegador, alterna (ativa ou desativa)
+            if (localStorage.getItem("adminAutenticado") === "true") {
+                toggleModoEstoque();
+            } else {
+                document.getElementById("modalAdmin").style.display = "flex";
+                document.getElementById("inputSenhaAdmin").focus();
+            }
+        }
+
+        function fecharModalAdmin() {
+            document.getElementById("modalAdmin").style.display = "none";
+            document.getElementById("inputSenhaAdmin").value = "";
+        }
+
+        function tratarTeclaSenha(e) {
+            if (e.key === 'Enter') {
+                validarSenhaAdmin();
+            }
+        }
+
+        function validarSenhaAdmin() {
+            const senhaDigitada = document.getElementById("inputSenhaAdmin").value;
+            if (senhaDigitada === senhaAdmin) {
+                localStorage.setItem("adminAutenticado", "true");
+                fecharModalAdmin();
+                modoGerenciarEstoque = false;
+                toggleModoEstoque(); // Ativa o modo de estoque
+            } else {
+                mostrarNotificacao("❌ Senha incorreta! Tente novamente.");
+                document.getElementById("inputSenhaAdmin").value = "";
+            }
+        }
+
+        function toggleModoEstoque() {
+            modoGerenciarEstoque = !modoGerenciarEstoque;
+            const container = document.getElementById("containerPrincipal");
+            const btnHeader = document.getElementById("btnAdminHeader");
+
+            if (modoGerenciarEstoque) {
+                container.classList.add("modo-admin-ativo");
+                if (btnHeader) btnHeader.style.display = "inline-block";
+                mostrarNotificacao("⚙️ Gerenciamento de estoque ATIVADO! Toque 3x no título para fechar.");
+            } else {
+                container.classList.remove("modo-admin-ativo");
+                if (btnHeader) btnHeader.style.display = "none";
+                mostrarNotificacao("🔒 Gerenciamento de estoque FECHADO.");
+            }
+        }
+
+        function alterarEstoqueManual(idProduto, delta) {
+            const p = produtos.find(prod => prod.id === idProduto);
+            if (p) {
+                p.estoque += delta;
+                if (p.estoque < 0) p.estoque = 0;
+                
+                // Se a quantidade no carrinho for maior que o novo estoque, ajusta
+                if ((carrinho[idProduto] || 0) > p.estoque) {
+                    carrinho[idProduto] = p.estoque;
+                    atualizarResumo();
+                }
+
+                renderizarProdutos();
+            }
+        }
+
+        function renderizarBotoesCategorias() {
+            const navContainer = document.getElementById("botoesCategorias");
+            navContainer.innerHTML = "";
+
+            categoriasDisponiveis.forEach(cat => {
+                const btn = document.createElement("button");
+                btn.className = `btn-categoria ${cat === categoriaFiltroAtual ? 'ativo' : ''}`;
+                btn.innerText = cat;
+                btn.onclick = () => {
+                    categoriaFiltroAtual = cat;
+                    renderizarBotoesCategorias();
+                    renderizarProdutos();
+                };
+                navContainer.appendChild(btn);
+            });
+        }
+
+        function renderizarProdutos() {
+            const container = document.getElementById("containerProdutos");
+            container.innerHTML = "";
+
+            const categoriasParaExibir = categoriaFiltroAtual === "Todos"
+                ? categoriasDisponiveis.filter(c => c !== "Todos")
+                : [categoriaFiltroAtual];
+
+            categoriasParaExibir.forEach(categoria => {
+                const produtosDaCategoria = produtos.filter(p => p.categoria === categoria);
+
+                if (produtosDaCategoria.length > 0) {
+                    const secao = document.createElement("section");
+                    secao.className = "secao-categoria";
+
+                    const titulo = document.createElement("h2");
+                    titulo.className = "titulo-categoria";
+                    titulo.innerText = categoria;
+                    secao.appendChild(titulo);
+
+                    const grid = document.createElement("div");
+                    grid.className = "produtos-grid";
+
+                    produtosDaCategoria.forEach(p => {
+                        const qtd = carrinho[p.id] || 0;
+                        const indisponivel = p.estoque <= 0;
+                        const semEstoqueParaAdicionar = qtd >= p.estoque;
+
+                        grid.innerHTML += `
+                            <div class="card ${indisponivel ? 'indisponivel' : ''}">
+                                <div class="img-container">
+                                    ${indisponivel ? '<div class="selo-esgotado">Esgotado</div>' : ''}
+                                    <img src="${p.imagem}" alt="${p.nome}" onerror="this.src='https://placehold.co/300x220/cccccc/333333?text=${encodeURIComponent(p.nome)}'">
+                                </div>
+                                <div class="info">
+                                    <div>
+                                        <div class="nome">${p.nome}</div>
+                                        <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                                        <div class="info-estoque ${indisponivel ? 'alerta' : ''}">
+                                            ${indisponivel ? '⚠️ Indisponível' : `Estoque: ${p.estoque} unid.`}
+                                        </div>
+
+                                        <!-- Painel visual para alteração rápida de estoque pelo dono -->
+                                        <div class="controle-estoque-admin">
+                                            <span style="font-size: 0.8rem; font-weight: bold;">Estoque do Item:</span><br>
+                                            <button class="btn-admin-estoque" onclick="alterarEstoqueManual(${p.id}, -1)">-</button>
+                                            <strong style="font-size: 0.9rem;">${p.estoque}</strong>
+                                            <button class="btn-admin-estoque" onclick="alterarEstoqueManual(${p.id}, 1)">+</button>
+                                        </div>
+                                    </div>
+
+                                    <div class="controle">
+                                        <button onclick="alterarQuantidade(${p.id}, -1)" ${qtd === 0 ? 'disabled style="opacity: 0.5;"' : ''}>-</button>
+                                        <span class="quantidade" id="qtd-${p.id}">${qtd}</span>
+                                        <button onclick="alterarQuantidade(${p.id}, 1)" ${semEstoqueParaAdicionar || indisponivel ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>+</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    secao.appendChild(grid);
+                    container.appendChild(secao);
+                }
+            });
+        }
+
+        function alterarQuantidade(idProduto, valor) {
+            const produto = produtos.find(p => p.id === idProduto);
+            if (!produto) return;
+
+            let qtdAtual = carrinho[idProduto] || 0;
+            let novaQtd = qtdAtual + valor;
+
+            if (valor > 0 && novaQtd > produto.estoque) {
+                mostrarNotificacao(`⚠️ Quantidade máxima disponível em estoque: ${produto.estoque} unidades.`);
+                return;
+            }
+
+            if (novaQtd < 0) {
+                novaQtd = 0;
+            }
+
+            carrinho[idProduto] = novaQtd;
+
+            // Recarrega os botões de controle do card para atualizar se o botão + deve travar
+            renderizarProdutos();
+            atualizarResumo();
+        }
+
+        function atualizarResumo() {
+            let html = "";
+            let total = 0;
+            let totalItens = 0;
+            let temItens = false;
+
+            produtos.forEach(p => {
+                const qtd = carrinho[p.id] || 0;
+                if (qtd > 0) {
+                    temItens = true;
+                    totalItens += qtd;
+                    const subtotal = p.preco * qtd;
+                    total += subtotal;
+
+                    html += `
+                        <div class="item-carrinho">
+                            <span><strong>${qtd}x</strong> ${p.nome}</span>
+                            <span>R$ ${subtotal.toFixed(2).replace('.', ',')}</span>
+                        </div>
+                    `;
+                }
+            });
+
+            if (!temItens) {
+                html = '<p style="color: #888;">Nenhum item selecionado ainda.</p>';
+            }
+
+            document.getElementById("listaPedido").innerHTML = html;
+            document.getElementById("totalPedido").innerText = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+            document.getElementById("badgeQtdItens").innerText = `${totalItens} ${totalItens === 1 ? 'item' : 'itens'}`;
+        }
+
+        function toggleCarrinho() {
+            const painel = document.getElementById("painelResumo");
+            const btn = document.getElementById("btnToggleCarrinho");
+            
+            painel.classList.toggle("recolhido");
+            
+            if (painel.classList.contains("recolhido")) {
+                btn.innerText = "Ver Itens ▲";
+            } else {
+                btn.innerText = "Ocultar Itens ▼";
+            }
+        }
+
+        function mostrarNotificacao(texto) {
+            const elemento = document.getElementById("notificacao");
+            if (texto) {
+                elemento.innerText = texto;
+            } else {
+                elemento.innerText = "⚠️ Selecione pelo menos um produto antes de enviar!";
+            }
+            elemento.style.display = "block";
+            setTimeout(() => {
+                elemento.style.display = "none";
+            }, 3500);
+        }
+
+        function enviarWhatsApp() {
+            let mensagem = "🛒 *Novo Pedido - Mercearia Star*%0A%0A";
+            let total = 0;
+            let temItens = false;
+
+            produtos.forEach(p => {
+                const qtd = carrinho[p.id] || 0;
+                if (qtd > 0) {
+                    temItens = true;
+                    const subtotal = p.preco * qtd;
+                    total += subtotal;
+                    mensagem += `• ${qtd}x ${p.nome} - R$ ${subtotal.toFixed(2).replace('.', ',')}%0A`;
+                }
+            });
+
+            if (!temItens) {
+                mostrarNotificacao();
+                return;
+            }
+
+            mensagem += `%0A💰 *Total do Pedido: R$ ${total.toFixed(2).replace('.', ',')}*`;
+
+            window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagem}`, '_blank');
+        }
+
+        window.onload = function() {
+            renderizarBotoesCategorias();
+            renderizarProdutos();
+            atualizarResumo();
+        };
+    </script>
+</body>
+
+</html>
