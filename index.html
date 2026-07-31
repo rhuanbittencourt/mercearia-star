@@ -17,7 +17,6 @@
         body {
             background: #33322D;
             color: #333;
-            /* Espaço para garantir que o último produto não fique coberto pelo painel do rodapé */
             padding-bottom: 160px;
             transition: background 0.3s ease;
         }
@@ -33,7 +32,6 @@
             padding: 0 15px;
         }
 
-        /* --- CABEÇALHO --- */
         header {
             background: #FFD21D;
             color: #33322D;
@@ -61,7 +59,6 @@
             opacity: 0.7;
         }
 
-        /* --- NAVEGAÇÃO DE CATEGORIAS --- */
         .categorias-nav {
             display: flex;
             gap: 10px;
@@ -106,7 +103,6 @@
             box-shadow: 0 4px 10px rgba(31, 180, 88, 0.3);
         }
 
-        /* --- PRODUTOS --- */
         .secao-categoria {
             margin-bottom: 35px;
         }
@@ -253,7 +249,6 @@
             text-align: center;
         }
 
-        /* --- RESUMO DO PEDIDO --- */
         .resumo {
             position: fixed;
             bottom: 0;
@@ -395,7 +390,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- MODAIS COMPARTILHADOS --- */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -431,9 +425,6 @@
             color: #2d3748;
         }
 
-        /* =========================================
-           NOVOS ESTILOS DO DASHBOARD (CRM) 
-           ========================================= */
         #adminDashboard {
             display: none;
             padding: 30px 15px;
@@ -503,7 +494,6 @@
         }
         .btn-admin-edit:hover { background: #3182ce; }
 
-        /* Tabela de Produtos */
         .table-container {
             background: white;
             border-radius: 12px;
@@ -548,7 +538,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* Formulário Modal CRM */
         .form-group {
             margin-bottom: 15px;
             text-align: left;
@@ -612,9 +601,6 @@
 
 <body>
 
-    <!-- ==========================================
-         VISUALIZAÇÃO DA LOJA (CLIENTE)
-         ========================================== -->
     <div id="storefrontView">
         <header id="mainHeader">
             <h1 onclick="contarCliquesTitulo()" style="cursor: pointer; user-select: none;" title="Clique 3x rapidamente para abrir o painel admin">
@@ -625,7 +611,9 @@
 
         <div class="container">
             <nav class="categorias-nav" id="botoesCategorias"></nav>
-            <main id="containerProdutos"></main>
+            <main id="containerProdutos">
+                <p style="text-align:center; color:#fff; padding: 50px;">Carregando produtos da nuvem...</p>
+            </main>
         </div>
 
         <section class="resumo recolhido" id="painelResumo">
@@ -657,9 +645,6 @@
         </section>
     </div>
 
-    <!-- ==========================================
-         VISUALIZAÇÃO DO DASHBOARD ADMINISTRATIVO (CRM)
-         ========================================== -->
     <div id="adminDashboard" class="container">
         <div class="admin-header">
             <div>
@@ -695,15 +680,8 @@
         </div>
     </div>
 
-
-    <!-- ==========================================
-         MODAIS E NOTIFICAÇÕES
-         ========================================== -->
-    
-    <!-- Caixa de Notificação -->
     <div id="notificacao" class="notificacao"></div>
 
-    <!-- Modal de Senha Administrativa -->
     <div id="modalAdminAuth" class="modal-overlay">
         <div class="modal-conteudo">
             <div class="modal-header">
@@ -718,14 +696,12 @@
         </div>
     </div>
 
-    <!-- Modal de Criação/Edição de Produto -->
     <div id="modalProdutoForm" class="modal-overlay">
         <div class="modal-conteudo large">
             <div class="modal-header">
                 <h3 id="modalProdutoTitulo">Adicionar Produto</h3>
             </div>
             <form id="formProduto" onsubmit="salvarProduto(event)">
-                <!-- Campo Oculto para ID (Se vazio, é criação; se preenchido, é edição) -->
                 <input type="hidden" id="formProdId">
 
                 <div class="form-group">
@@ -766,50 +742,64 @@
         </div>
     </div>
 
-    <script>
-        /* ========================================================
-           CONFIGURAÇÕES DA LOJA E INICIALIZAÇÃO DE ESTADO
-           ======================================================== */
-        const numeroWhatsApp = "5522988098858";
-        const senhaAdmin = "1234"; // ⬅️ SUA SENHA DE ACESSO AO PAINEL AQUI
+    <!-- SDKs do Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
-        // Estado Global da Aplicação
+    <script>
+        const numeroWhatsApp = "5522988098858";
+        const senhaAdmin = "1234";
+
+        // CONFIGURAÇÃO DO FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_sW8RwLUFOS1JMYtUZ3BxWEAdjKh-q1Q",
+            authDomain: "mercearia-star-2.firebaseapp.com",
+            projectId: "mercearia-star-2",
+            storageBucket: "mercearia-star-2.firebasestorage.app",
+            messagingSenderId: "851862431234",
+            appId: "1:851862431234:web:6716f893f7d782dd81a91b"
+        };
+
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Estado Global
         let state = {
-            produtos: [
-                { id: 0, categoria: "Barras de Chocolate", nome: "Sonho de Valsa", preco: 12.00, estoque: 10, imagem: "https://placehold.co/300x220/f39c12/ffffff?text=Sonho+de+Valsa" },
-                { id: 1, categoria: "Barras de Chocolate", nome: "Diamante Negro", preco: 12.00, estoque: 5, imagem: "https://placehold.co/300x220/2c3e50/ffffff?text=Diamante+Negro" },
-                { id: 2, categoria: "Barras de Chocolate", nome: "Prestígio", preco: 12.00, estoque: 0, imagem: "https://placehold.co/300x220/c0392b/ffffff?text=Prestigio" },
-                { id: 3, categoria: "Barras de Chocolate", nome: "Ao Leite", preco: 12.00, estoque: 8, imagem: "https://placehold.co/300x220/8e44ad/ffffff?text=Ao+Leite" },
-                { id: 8, categoria: "Amendoins", nome: "Amendoim Japones 150g", preco: 5.50, estoque: 20, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Japones" },
-                { id: 11, categoria: "Balas e Chicletes", nome: "Halls Extra Forte", preco: 2.50, estoque: 30, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Extra+Forte" },
-                { id: 15, categoria: "Produtos Diversos", nome: "Copo STANLEY", preco: 50.00, estoque: 10, imagem: "https://placehold.co/300x220/dc3545/ffffff?text=Copo+STANLEY" }
-            ],
+            produtos: [],
             carrinho: {},
             categoriaAtual: "Todos",
             cliquesTitulo: 0,
             timerCliques: null
         };
 
-        // Função auxiliar para obter categorias dinamicamente baseadas nos produtos existentes
-        function getCategoriasDisponiveis() {
-            const categoriasUnicas = new Set(state.produtos.map(p => p.categoria));
-            return ["Todos", ...Array.from(categoriasUnicas).sort()];
-        }
+        // ESCUTAR O BANCO DE DADOS EM TEMPO REAL
+        db.collection("produtos").onSnapshot((snapshot) => {
+            state.produtos = [];
+            snapshot.forEach((doc) => {
+                let p = doc.data();
+                p.id = doc.id; // O ID gerado pelo Firebase (Texto)
+                state.produtos.push(p);
 
-        // ==========================================
-        // LÓGICA DO CLIENTE (STOREFRONT)
-        // ==========================================
-
-        function initStorefront() {
-            // Garante que o carrinho tenha todos os IDs inicializados em 0
-            state.produtos.forEach(p => {
-                if(state.carrinho[p.id] === undefined) {
+                // Inicia o carrinho com 0 para novos produtos
+                if (state.carrinho[p.id] === undefined) {
                     state.carrinho[p.id] = 0;
                 }
             });
+
+            // Atualiza toda a tela automaticamente
             renderizarBotoesCategorias();
             renderizarProdutosLoja();
             atualizarResumoCarrinho();
+
+            if (document.getElementById("adminDashboard").style.display === "block") {
+                renderizarTabelaAdmin();
+            }
+        });
+
+        function getCategoriasDisponiveis() {
+            const categoriasUnicas = new Set(state.produtos.map(p => p.categoria));
+            return ["Todos", ...Array.from(categoriasUnicas).sort()];
         }
 
         function renderizarBotoesCategorias() {
@@ -823,7 +813,7 @@
                 btn.innerText = cat;
                 btn.onclick = () => {
                     state.categoriaAtual = cat;
-                    renderizarBotoesCategorias(); // atualiza classe ativa
+                    renderizarBotoesCategorias();
                     renderizarProdutosLoja();
                 };
                 navContainer.appendChild(btn);
@@ -838,6 +828,11 @@
             const categoriasParaExibir = state.categoriaAtual === "Todos"
                 ? categorias.filter(c => c !== "Todos")
                 : [state.categoriaAtual];
+
+            if (state.produtos.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:#fff; padding: 50px;">A loja ainda não possui produtos cadastrados.</p>';
+                return;
+            }
 
             categoriasParaExibir.forEach(categoria => {
                 const produtosDaCategoria = state.produtos.filter(p => p.categoria === categoria);
@@ -875,9 +870,9 @@
                                     </div>
 
                                     <div class="controle">
-                                        <button onclick="alterarQuantidade(${p.id}, -1)" ${qtd === 0 ? 'disabled style="opacity: 0.5;"' : ''}>-</button>
+                                        <button onclick="alterarQuantidade('${p.id}', -1)" ${qtd === 0 ? 'disabled style="opacity: 0.5;"' : ''}>-</button>
                                         <span class="quantidade" id="qtd-${p.id}">${qtd}</span>
-                                        <button onclick="alterarQuantidade(${p.id}, 1)" ${semEstoqueParaAdicionar || indisponivel ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>+</button>
+                                        <button onclick="alterarQuantidade('${p.id}', 1)" ${semEstoqueParaAdicionar || indisponivel ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>+</button>
                                     </div>
                                 </div>
                             </div>
@@ -971,10 +966,6 @@
             window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagem}`, '_blank');
         }
 
-        // ==========================================
-        // LÓGICA DE AUTENTICAÇÃO (MÉTODO DOS 3 CLIQUES)
-        // ==========================================
-
         function contarCliquesTitulo() {
             state.cliquesTitulo++;
             if (state.timerCliques) clearTimeout(state.timerCliques);
@@ -990,7 +981,6 @@
         }
 
         function abrirModalAuth() {
-            // Se já logou antes na mesma sessão (recarregar página perde, pois é em-memória)
             if (sessionStorage.getItem("adminAutenticado") === "true") {
                 abrirAdminDashboard();
             } else {
@@ -1020,10 +1010,6 @@
             }
         }
 
-        // ==========================================
-        // LÓGICA DO DASHBOARD ADMINISTRATIVO (CRM)
-        // ==========================================
-
         function abrirAdminDashboard() {
             document.getElementById("storefrontView").style.display = "none";
             document.getElementById("adminDashboard").style.display = "block";
@@ -1035,8 +1021,6 @@
             document.getElementById("adminDashboard").style.display = "none";
             document.getElementById("storefrontView").style.display = "block";
             document.body.classList.remove("admin-mode");
-            // Atualiza a loja com as possíveis mudanças feitas no CRM
-            initStorefront(); 
         }
 
         function renderizarTabelaAdmin() {
@@ -1044,7 +1028,7 @@
             tbody.innerHTML = "";
 
             if (state.produtos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px;">Nenhum produto cadastrado.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px;">Nenhum produto cadastrado na nuvem.</td></tr>`;
                 return;
             }
 
@@ -1064,16 +1048,14 @@
                         </td>
                         <td>
                             <div style="display:flex; gap: 8px;">
-                                <button class="btn-admin btn-admin-edit" onclick="editarProduto(${p.id})">✏️ Editar</button>
-                                <button class="btn-admin btn-admin-danger" onclick="excluirProduto(${p.id})">🗑️ Excluir</button>
+                                <button class="btn-admin btn-admin-edit" onclick="editarProduto('${p.id}')">✏️ Editar</button>
+                                <button class="btn-admin btn-admin-danger" onclick="excluirProduto('${p.id}')">🗑️ Excluir</button>
                             </div>
                         </td>
                     </tr>
                 `;
             });
         }
-
-        // --- FUNÇÕES DO MODAL DE PRODUTO ---
         
         function preencherDatalistCategorias() {
             const datalist = document.getElementById("listaCategoriasForm");
@@ -1113,7 +1095,7 @@
         }
 
         function salvarProduto(e) {
-            e.preventDefault(); // Impede o reload da página
+            e.preventDefault(); 
 
             const idField = document.getElementById("formProdId").value;
             const nome = document.getElementById("formProdNome").value.trim();
@@ -1122,46 +1104,27 @@
             const estoque = parseInt(document.getElementById("formProdEstoque").value, 10);
             const imagem = document.getElementById("formProdImagem").value.trim();
 
-            if (idField === "") {
-                // CRIAR NOVO
-                const novoId = state.produtos.length > 0 ? Math.max(...state.produtos.map(p => p.id)) + 1 : 1;
-                state.produtos.push({ id: novoId, nome, categoria, preco, estoque, imagem });
-                state.carrinho[novoId] = 0; // Inicializa no carrinho
-                mostrarNotificacao("✅ Produto criado com sucesso!", true);
-            } else {
-                // ATUALIZAR EXISTENTE
-                const idNum = parseInt(idField, 10);
-                const index = state.produtos.findIndex(p => p.id === idNum);
-                if (index !== -1) {
-                    state.produtos[index] = { id: idNum, nome, categoria, preco, estoque, imagem };
-                    
-                    // Ajusta o carrinho se o estoque foi reduzido para menos do que já tem no carrinho
-                    if ((state.carrinho[idNum] || 0) > estoque) {
-                        state.carrinho[idNum] = estoque;
-                    }
-                    mostrarNotificacao("✅ Produto atualizado!", true);
-                }
-            }
+            const produtoData = { nome, categoria, preco, estoque, imagem };
 
-            fecharModalProduto();
-            renderizarTabelaAdmin(); // Atualiza a tabela do dashboard
+            if (idField === "") {
+                db.collection("produtos").add(produtoData).then(() => {
+                    mostrarNotificacao("✅ Produto salvo na nuvem!", true);
+                    fecharModalProduto();
+                });
+            } else {
+                db.collection("produtos").doc(idField).update(produtoData).then(() => {
+                    mostrarNotificacao("✅ Produto atualizado na nuvem!", true);
+                    fecharModalProduto();
+                });
+            }
         }
 
         function excluirProduto(id) {
-            // Em vez de alert ou confirm bloqueante (regra do sistema), usamos um visual
-            // Para simplificar no HTML em 1 arquivo, exclui direto com notificação reversível visualmente (ou só exclui).
-            // Vamos apenas excluir para manter a funcionalidade fluida sem usar o confirm().
-            
-            state.produtos = state.produtos.filter(p => p.id !== id);
-            delete state.carrinho[id];
-            
-            mostrarNotificacao("🗑️ Produto excluído.", true);
-            renderizarTabelaAdmin();
+            db.collection("produtos").doc(id).delete().then(() => {
+                delete state.carrinho[id];
+                mostrarNotificacao("🗑️ Produto excluído da nuvem.", true);
+            });
         }
-
-        // ==========================================
-        // UTILITÁRIOS GERAIS
-        // ==========================================
 
         function mostrarNotificacao(texto, sucesso = false) {
             const elemento = document.getElementById("notificacao");
@@ -1178,11 +1141,6 @@
                 elemento.style.display = "none";
             }, 3000);
         }
-
-        // Inicia a loja ao carregar a página
-        window.onload = function() {
-            initStorefront();
-        };
 
     </script>
 </body>
