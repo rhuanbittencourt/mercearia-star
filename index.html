@@ -19,6 +19,12 @@
             color: #333;
             /* Espaço para garantir que o último produto não fique coberto pelo painel do rodapé */
             padding-bottom: 160px;
+            transition: background 0.3s ease;
+        }
+
+        body.admin-mode {
+            background: #f4f7f6;
+            padding-bottom: 0;
         }
 
         .container {
@@ -27,8 +33,9 @@
             padding: 0 15px;
         }
 
+        /* --- CABEÇALHO --- */
         header {
-            background:#FFD21D;
+            background: #FFD21D;
             color: #33322D;
             text-align: center;
             padding: 30px 15px;
@@ -36,7 +43,6 @@
             border-bottom-right-radius: 20px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
             margin-bottom: 25px;
-           
         }
 
         header h1 {
@@ -55,6 +61,7 @@
             opacity: 0.7;
         }
 
+        /* --- NAVEGAÇÃO DE CATEGORIAS --- */
         .categorias-nav {
             display: flex;
             gap: 10px;
@@ -99,16 +106,17 @@
             box-shadow: 0 4px 10px rgba(31, 180, 88, 0.3);
         }
 
+        /* --- PRODUTOS --- */
         .secao-categoria {
             margin-bottom: 35px;
         }
 
         .titulo-categoria {
             font-size: 1.4rem;
-            color: #2d3748;
+            color: #ffffff;
             margin-bottom: 15px;
             padding-bottom: 8px;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid #555;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -136,7 +144,6 @@
             box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* --- ESTILOS PARA PRODUTOS INDISPONÍVEIS / ESGOTADOS --- */
         .card.indisponivel {
             opacity: 0.65;
             filter: grayscale(85%);
@@ -168,117 +175,6 @@
         .info-estoque.alerta {
             color: #e53e3e;
         }
-
-        /* PAINEL DE EDICAO DE ESTOQUE PELO USUÁRIO/ADMIN */
-        .controle-estoque-admin {
-            display: none;
-            background: #edf2f7;
-            padding: 8px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            text-align: center;
-            border: 1px dashed #cbd5e0;
-        }
-
-        .modo-admin-ativo .controle-estoque-admin {
-            display: block;
-        }
-
-        .btn-admin-estoque {
-            background: #4a5568;
-            color: white;
-            border: none;
-            padding: 2px 8px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin: 0 4px;
-        }
-
-        .btn-admin-estoque:hover {
-            background: #2d3748;
-        }
-
-        .btn-toggle-admin {
-            background: #4a5568;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background 0.2s;
-            margin-top: 10px;
-        }
-
-        .btn-toggle-admin:hover {
-            background: #2d3748;
-        }
-
-        /* --- MODAL DE SENHA DO ADMIN --- */
-        .modal-admin {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 20000;
-            padding: 15px;
-        }
-
-        .modal-conteudo {
-            background: white;
-            padding: 25px;
-            border-radius: 16px;
-            max-width: 350px;
-            width: 100%;
-            text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-        }
-
-        .modal-conteudo h3 {
-            margin-bottom: 10px;
-            color: #2d3748;
-        }
-
-        .modal-conteudo input {
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 2px solid #e2e8f0;
-            border-radius: 8px;
-            font-size: 1rem;
-            text-align: center;
-            outline: none;
-        }
-
-        .modal-conteudo input:focus {
-            border-color: #1fb458;
-        }
-
-        .modal-botoes {
-            display: flex;
-            gap: 10px;
-        }
-
-        .btn-modal {
-            flex: 1;
-            padding: 10px;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 0.95rem;
-        }
-
-        .btn-modal.confirmar { background: #1fb458; color: white; }
-        .btn-modal.cancelar { background: #e2e8f0; color: #4a5568; }
 
         .card .img-container {
             position: relative;
@@ -357,18 +253,19 @@
             text-align: center;
         }
 
+        /* --- RESUMO DO PEDIDO --- */
         .resumo {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            z-index: 9999; /* Z-index elevado para ficar sobre todos os elementos */
+            z-index: 9999;
             background: #ffffff;
             padding: 15px 20px;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.15);
             border-top: 4px solid #25D366;
-            transition: all 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .resumo-conteudo {
@@ -438,7 +335,6 @@
             padding-top: 10px;
         }
 
-        /* Oculta a lista quando recolhido */
         .resumo.recolhido .lista-pedido-container {
             display: none;
         }
@@ -457,7 +353,7 @@
             padding: 14px;
             border: none;
             background: #FFD21D;
-            color: #ffffff;
+            color: #33322D;
             font-size: 1.05rem;
             font-weight: 700;
             cursor: pointer;
@@ -467,39 +363,12 @@
             justify-content: center;
             gap: 10px;
             transition: background 0.2s, transform 0.1s;
-            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+            box-shadow: 0 4px 12px rgba(255, 210, 29, 0.3);
         }
 
         .btn-whatsapp:hover {
-            background: #1fb458;
+            background: #e6bd19;
             transform: translateY(-2px);
-        }
-
-        @media (max-width: 600px) {
-            .produtos-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 12px;
-            }
-
-            .card img {
-                height: 130px;
-            }
-
-            .card .nome {
-                font-size: 0.95rem;
-            }
-
-            .card .preco {
-                font-size: 1.05rem;
-            }
-
-            .resumo h2 {
-                font-size: 1.1rem;
-            }
-
-            .total-destaque {
-                font-size: 1.1rem;
-            }
         }
 
         .notificacao {
@@ -517,34 +386,248 @@
             animation: fadeIn 0.3s ease-in-out;
         }
 
+        .notificacao.sucesso {
+            background: #2ecc71;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- MODAIS COMPARTILHADOS --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 20000;
+            padding: 15px;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-conteudo {
+            background: white;
+            padding: 25px;
+            border-radius: 16px;
+            max-width: 400px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .modal-conteudo.large {
+            max-width: 500px;
+        }
+
+        .modal-header {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2d3748;
+        }
+
+        /* =========================================
+           NOVOS ESTILOS DO DASHBOARD (CRM) 
+           ========================================= */
+        #adminDashboard {
+            display: none;
+            padding: 30px 15px;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .admin-header h2 {
+            font-size: 1.8rem;
+            color: #2d3748;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-admin {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-admin-primary {
+            background: #FFD21D;
+            color: #33322D;
+        }
+        .btn-admin-primary:hover { background: #e6bd19; }
+
+        .btn-admin-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+        .btn-admin-secondary:hover { background: #cbd5e0; }
+
+        .btn-admin-danger {
+            background: #fc8181;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        .btn-admin-danger:hover { background: #e53e3e; }
+
+        .btn-admin-edit {
+            background: #63b3ed;
+            color: white;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+        }
+        .btn-admin-edit:hover { background: #3182ce; }
+
+        /* Tabela de Produtos */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            overflow-x: auto;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 15px;
+            border-bottom: 1px solid #edf2f7;
+        }
+
+        .admin-table th {
+            background: #f7fafc;
+            font-weight: 600;
+            color: #4a5568;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .admin-table td {
+            color: #2d3748;
+            vertical-align: middle;
+        }
+
+        .admin-table tr:hover {
+            background: #f7fafc;
+        }
+
+        .admin-prod-img {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* Formulário Modal CRM */
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: #FFD21D;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 15px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .modal-botoes {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .modal-botoes button {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .produtos-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 12px;
+            }
+            .card .img-container { height: 120px; }
+            .card .nome { font-size: 0.95rem; }
+            .card .preco { font-size: 1.05rem; }
+            
+            .admin-header { flex-direction: column; align-items: stretch; text-align: center; }
+            .admin-actions { flex-direction: column; }
         }
     </style>
 </head>
 
 <body>
 
-    <!-- CABEÇALHO DO SITE -->
-    <header>
-        <h1 onclick="contarCliquesTitulo()" style="cursor: pointer; user-select: none;">🍫 Mercearia Star</h1>
-        <p>Faça seu pedido que levo até você!</p>
-        <!-- O botão por padrão inicia Oculto (display: none) -->
-        <button id="btnAdminHeader" class="btn-toggle-admin" style="display: none;" onclick="toggleModoEstoque()">⚙️ Gerenciar Estoque</button>
-    </header>
+    <!-- ==========================================
+         VISUALIZAÇÃO DA LOJA (CLIENTE)
+         ========================================== -->
+    <div id="storefrontView">
+        <header id="mainHeader">
+            <h1 onclick="contarCliquesTitulo()" style="cursor: pointer; user-select: none;" title="Clique 3x rapidamente para abrir o painel admin">
+                Mercearia Star
+            </h1>
+            <p>Faça seu pedido que levo até você!</p>
+        </header>
 
-    <div class="container" id="containerPrincipal">
+        <div class="container">
+            <nav class="categorias-nav" id="botoesCategorias"></nav>
+            <main id="containerProdutos"></main>
+        </div>
 
-        <!-- BOTÕES DE FILTRO POR CATEGORIA -->
-        <nav class="categorias-nav" id="botoesCategorias">
-            <!-- Gerado via JavaScript -->
-        </nav>
-
-        <!-- ÁREA ONDE OS PRODUTOS APARECEM SEPARADOS POR CATEGORIA -->
-        <main id="containerProdutos"></main>
-
-        <!-- RESUMO DO PEDIDO DO CLIENTE (FIXO E FLUTUANTE NO RODAPÉ) -->
         <section class="resumo recolhido" id="painelResumo">
             <div class="resumo-conteudo">
                 <div class="resumo-header">
@@ -554,9 +637,7 @@
                     </h2>
                     
                     <div class="resumo-acoes-topo">
-                        <div class="total-destaque" id="totalPedido">
-                            Total: R$ 0,00
-                        </div>
+                        <div class="total-destaque" id="totalPedido">Total: R$ 0,00</div>
                         <button class="btn-toggle-carrinho" id="btnToggleCarrinho" onclick="toggleCarrinho()">
                             Ver Itens ▲
                         </button>
@@ -570,201 +651,196 @@
                 </div>
 
                 <button class="btn-whatsapp" onclick="enviarWhatsApp()">
-                    📲 Enviar Pedido no WhatsApp
+                    Enviar Pedido no WhatsApp
                 </button>
             </div>
         </section>
-
     </div>
 
-    <!-- CAIXA DE NOTIFICAÇÃO QUANDO NENHUM ITEM FOI SELECIONADO -->
-    <div id="notificacao" class="notificacao">
-        ⚠️ Selecione pelo menos um produto antes de enviar!
-    </div>
-
-    <!-- MODAL DE SENHA ADMINISTRATIVA -->
-    <div id="modalAdmin" class="modal-admin">
-        <div class="modal-conteudo">
-            <h3>🔐 Área do Proprietário</h3>
-            <p style="font-size: 0.85rem; color: #666;">Digite sua senha para acessar o painel de estoque:</p>
-            <input type="password" id="inputSenhaAdmin" placeholder="Digite sua senha" onkeypress="tratarTeclaSenha(event)">
-            <div class="modal-botoes">
-                <button class="btn-modal cancelar" onclick="fecharModalAdmin()">Cancelar</button>
-                <button class="btn-modal confirmar" onclick="validarSenhaAdmin()">Entrar</button>
+    <!-- ==========================================
+         VISUALIZAÇÃO DO DASHBOARD ADMINISTRATIVO (CRM)
+         ========================================== -->
+    <div id="adminDashboard" class="container">
+        <div class="admin-header">
+            <div>
+                <h2>📦 Painel de Controle de Estoque</h2>
+                <p style="color: #718096; margin-top: 5px;">Gerencie seus produtos, categorias e preços.</p>
             </div>
+            <div class="admin-actions">
+                <button class="btn-admin btn-admin-secondary" onclick="fecharAdminDashboard()">
+                    👁️ Ver Loja
+                </button>
+                <button class="btn-admin btn-admin-primary" onclick="abrirModalProduto()">
+                    ➕ Novo Produto
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Imagem</th>
+                        <th>Nome</th>
+                        <th>Categoria</th>
+                        <th>Preço</th>
+                        <th>Estoque</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaProdutosBody">
+                    <!-- Gerado via JS -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <!-- ==========================================
+         MODAIS E NOTIFICAÇÕES
+         ========================================== -->
+    
+    <!-- Caixa de Notificação -->
+    <div id="notificacao" class="notificacao"></div>
+
+    <!-- Modal de Senha Administrativa -->
+    <div id="modalAdminAuth" class="modal-overlay">
+        <div class="modal-conteudo">
+            <div class="modal-header">
+                <h3>🔐 Área do Proprietário</h3>
+                <p style="font-size: 0.85rem; color: #666; margin-top: 5px;">Digite sua senha para acessar o painel completo.</p>
+            </div>
+            <input type="password" id="inputSenhaAdmin" style="width: 100%; padding: 12px; margin-bottom: 15px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 1rem; text-align: center;" placeholder="Digite sua senha" onkeypress="tratarTeclaSenha(event)">
+            <div class="modal-botoes">
+                <button class="btn-admin btn-admin-secondary" onclick="fecharModalAuth()">Cancelar</button>
+                <button class="btn-admin btn-admin-primary" onclick="validarSenhaAdmin()">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Criação/Edição de Produto -->
+    <div id="modalProdutoForm" class="modal-overlay">
+        <div class="modal-conteudo large">
+            <div class="modal-header">
+                <h3 id="modalProdutoTitulo">Adicionar Produto</h3>
+            </div>
+            <form id="formProduto" onsubmit="salvarProduto(event)">
+                <!-- Campo Oculto para ID (Se vazio, é criação; se preenchido, é edição) -->
+                <input type="hidden" id="formProdId">
+
+                <div class="form-group">
+                    <label>Nome do Produto *</label>
+                    <input type="text" id="formProdNome" required placeholder="Ex: Cerveja Lata 350ml">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Categoria *</label>
+                        <input type="text" id="formProdCategoria" list="listaCategoriasForm" required placeholder="Digite ou selecione">
+                        <datalist id="listaCategoriasForm"></datalist>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Preço (R$) *</label>
+                        <input type="number" id="formProdPreco" step="0.01" min="0" required placeholder="0.00">
+                    </div>
+                    <div class="form-group">
+                        <label>Estoque (Unid.) *</label>
+                        <input type="number" id="formProdEstoque" min="0" required placeholder="10">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>URL da Imagem (Link) *</label>
+                    <input type="url" id="formProdImagem" required placeholder="https://exemplo.com/imagem.jpg">
+                    <small style="color: #718096; font-size: 0.8rem; display: block; margin-top: 4px;">Copie e cole o link de uma imagem da internet.</small>
+                </div>
+
+                <div class="modal-botoes">
+                    <button type="button" class="btn-admin btn-admin-secondary" onclick="fecharModalProduto()">Cancelar</button>
+                    <button type="submit" class="btn-admin btn-admin-primary">Salvar Produto</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
         /* ========================================================
-           GUIA DE EDIÇÃO DA SUA LOJA:
-           
-           1. MUDAR A SENHA ADMINISTRATIVA:
-              Altere a variável 'senhaAdmin' para a senha que desejar.
-           
-           2. MUDAR O NÚMERO DO WHATSAPP:
-              Altere a variável 'numeroWhatsApp' abaixo com seu DDD.
-
-           3. GERENCIAR CATEGORIAS E PRODUTOS:
-              Adicione ou remova itens na lista 'produtos' alterando o 'estoque'.
+           CONFIGURAÇÕES DA LOJA E INICIALIZAÇÃO DE ESTADO
            ======================================================== */
-
         const numeroWhatsApp = "5522988098858";
-        const senhaAdmin = "1234"; // ⬅️ SUA SENHA DE ACESSO AQUI
+        const senhaAdmin = "1234"; // ⬅️ SUA SENHA DE ACESSO AO PAINEL AQUI
 
-        const categoriasDisponiveis = [
-            "Todos",
-            "Barras de Chocolate",
-            "Amendoins",
-            "Balas e Chicletes",
-            "Bebidas e Outros"
-        ];
+        // Estado Global da Aplicação
+        let state = {
+            produtos: [
+                { id: 0, categoria: "Barras de Chocolate", nome: "Sonho de Valsa", preco: 12.00, estoque: 10, imagem: "https://placehold.co/300x220/f39c12/ffffff?text=Sonho+de+Valsa" },
+                { id: 1, categoria: "Barras de Chocolate", nome: "Diamante Negro", preco: 12.00, estoque: 5, imagem: "https://placehold.co/300x220/2c3e50/ffffff?text=Diamante+Negro" },
+                { id: 2, categoria: "Barras de Chocolate", nome: "Prestígio", preco: 12.00, estoque: 0, imagem: "https://placehold.co/300x220/c0392b/ffffff?text=Prestigio" },
+                { id: 3, categoria: "Barras de Chocolate", nome: "Ao Leite", preco: 12.00, estoque: 8, imagem: "https://placehold.co/300x220/8e44ad/ffffff?text=Ao+Leite" },
+                { id: 8, categoria: "Amendoins", nome: "Amendoim Japones 150g", preco: 5.50, estoque: 20, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Japones" },
+                { id: 11, categoria: "Balas e Chicletes", nome: "Halls Extra Forte", preco: 2.50, estoque: 30, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Extra+Forte" },
+                { id: 15, categoria: "Produtos Diversos", nome: "Copo STANLEY", preco: 50.00, estoque: 10, imagem: "https://placehold.co/300x220/dc3545/ffffff?text=Copo+STANLEY" }
+            ],
+            carrinho: {},
+            categoriaAtual: "Todos",
+            cliquesTitulo: 0,
+            timerCliques: null
+        };
 
-        // Lista de produtos com quantidade em ESTOQUE individual
-        const produtos = [
-            // --- BARRAS DE CHOCOLATE ---
-            { id: 0, categoria: "Barras de Chocolate", nome: "Sonho de Valsa", preco: 12.00, estoque: 10, imagem: "imagens/sonho-de-valsa.jpg" },
-            { id: 1, categoria: "Barras de Chocolate", nome: "Diamante Negro", preco: 12.00, estoque: 5, imagem: "imagens/diamante.jpg" },
-            { id: 2, categoria: "Barras de Chocolate", nome: "Prestígio", preco: 12.00, estoque: 0, imagem: "imagens/prestigio.png" }, // Teste de estoque 0 (Indisponível)
-            { id: 3, categoria: "Barras de Chocolate", nome: "Ao Leite", preco: 12.00, estoque: 8, imagem: "imagens/ao-leite.jpg" },
-            { id: 4, categoria: "Barras de Chocolate", nome: "Meio Amargo", preco: 12.00, estoque: 15, imagem: "imagens/amargo.jpg" },
-            { id: 5, categoria: "Barras de Chocolate", nome: "Negresco", preco: 12.00, estoque: 2, imagem: "imagens/negresco.jpg" },
-            { id: 6, categoria: "Barras de Chocolate", nome: "Cajú com Passas", preco: 12.00, estoque: 0, imagem: "imagens/caju-passas.jpg" },
-            { id: 7, categoria: "Barras de Chocolate", nome: "Cajú", preco: 12.00, estoque: 6, imagem: "imagens/caju.jpg" },
-
-            // --- AMENDOINS ---
-            { id: 8, categoria: "Amendoins", nome: "Amendoim Japones 150g", preco: 5.50, estoque: 20, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Japones" },
-            { id: 9, categoria: "Amendoins", nome: "Amendoim Salgado 100g", preco: 4.50, estoque: 12, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Salgado" },
-            { id: 10, categoria: "Amendoins", nome: "Amendoim Doce Crocante", preco: 5.00, estoque: 0, imagem: "https://placehold.co/300x220/28a745/ffffff?text=Amendoim+Doce" },
-
-            // --- BALAS E CHICLETES ---
-            { id: 11, categoria: "Balas e Chicletes", nome: "Halls Extra Forte", preco: 2.50, estoque: 30, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Extra+Forte" },
-            { id: 12, categoria: "Balas e Chicletes", nome: "Halls Menta", preco: 2.50, estoque: 25, imagem: "https://placehold.co/300x220/007bff/ffffff?text=Halls+Menta" },
-            { id: 13, categoria: "Balas e Chicletes", nome: "Trident Menta", preco: 3.50, estoque: 15, imagem: "https://placehold.co/300x220/17a2b8/ffffff?text=Trident+Menta" },
-            { id: 14, categoria: "Balas e Chicletes", nome: "Trident Melancia", preco: 3.50, estoque: 0, imagem: "https://placehold.co/300x220/e83e8c/ffffff?text=Trident+Melancia" },
-
-            // --- BEBIDAS E OUTROS ---
-            { id: 15, categoria: "Bebidas e Outros", nome: "Refrigerante Caçulinha", preco: 3.50, estoque: 10, imagem: "https://placehold.co/300x220/dc3545/ffffff?text=Refrigerante" },
-            { id: 16, categoria: "Bebidas e Outros", nome: "Água Mineral 500ml", preco: 2.50, estoque: 18, imagem: "https://placehold.co/300x220/17a2b8/ffffff?text=Agua+Mineral" }
-        ];
-
-        let carrinho = {};
-        let categoriaFiltroAtual = "Todos";
-        let modoGerenciarEstoque = false;
-        let cliquesTitulo = 0;
-        let timerCliques = null;
-
-        // Inicializa contadores zerados no carrinho
-        produtos.forEach(p => carrinho[p.id] = 0);
-
-        // FUNÇÃO DE SEGURANÇA: Conta 3 toques rápidos no título do cabeçalho
-        function contarCliquesTitulo() {
-            cliquesTitulo++;
-            if (timerCliques) clearTimeout(timerCliques);
-
-            timerCliques = setTimeout(() => {
-                cliquesTitulo = 0;
-            }, 1200);
-
-            if (cliquesTitulo >= 3) {
-                cliquesTitulo = 0;
-                abrirModalOuAlternarEstoque();
-            }
+        // Função auxiliar para obter categorias dinamicamente baseadas nos produtos existentes
+        function getCategoriasDisponiveis() {
+            const categoriasUnicas = new Set(state.produtos.map(p => p.categoria));
+            return ["Todos", ...Array.from(categoriasUnicas).sort()];
         }
 
-        function abrirModalOuAlternarEstoque() {
-            // Se já autenticou antes neste navegador, alterna (ativa ou desativa)
-            if (localStorage.getItem("adminAutenticado") === "true") {
-                toggleModoEstoque();
-            } else {
-                document.getElementById("modalAdmin").style.display = "flex";
-                document.getElementById("inputSenhaAdmin").focus();
-            }
-        }
+        // ==========================================
+        // LÓGICA DO CLIENTE (STOREFRONT)
+        // ==========================================
 
-        function fecharModalAdmin() {
-            document.getElementById("modalAdmin").style.display = "none";
-            document.getElementById("inputSenhaAdmin").value = "";
-        }
-
-        function tratarTeclaSenha(e) {
-            if (e.key === 'Enter') {
-                validarSenhaAdmin();
-            }
-        }
-
-        function validarSenhaAdmin() {
-            const senhaDigitada = document.getElementById("inputSenhaAdmin").value;
-            if (senhaDigitada === senhaAdmin) {
-                localStorage.setItem("adminAutenticado", "true");
-                fecharModalAdmin();
-                modoGerenciarEstoque = false;
-                toggleModoEstoque(); // Ativa o modo de estoque
-            } else {
-                mostrarNotificacao("❌ Senha incorreta! Tente novamente.");
-                document.getElementById("inputSenhaAdmin").value = "";
-            }
-        }
-
-        function toggleModoEstoque() {
-            modoGerenciarEstoque = !modoGerenciarEstoque;
-            const container = document.getElementById("containerPrincipal");
-            const btnHeader = document.getElementById("btnAdminHeader");
-
-            if (modoGerenciarEstoque) {
-                container.classList.add("modo-admin-ativo");
-                if (btnHeader) btnHeader.style.display = "inline-block";
-                mostrarNotificacao("⚙️ Gerenciamento de estoque ATIVADO! Toque 3x no título para fechar.");
-            } else {
-                container.classList.remove("modo-admin-ativo");
-                if (btnHeader) btnHeader.style.display = "none";
-                mostrarNotificacao("🔒 Gerenciamento de estoque FECHADO.");
-            }
-        }
-
-        function alterarEstoqueManual(idProduto, delta) {
-            const p = produtos.find(prod => prod.id === idProduto);
-            if (p) {
-                p.estoque += delta;
-                if (p.estoque < 0) p.estoque = 0;
-                
-                // Se a quantidade no carrinho for maior que o novo estoque, ajusta
-                if ((carrinho[idProduto] || 0) > p.estoque) {
-                    carrinho[idProduto] = p.estoque;
-                    atualizarResumo();
+        function initStorefront() {
+            // Garante que o carrinho tenha todos os IDs inicializados em 0
+            state.produtos.forEach(p => {
+                if(state.carrinho[p.id] === undefined) {
+                    state.carrinho[p.id] = 0;
                 }
-
-                renderizarProdutos();
-            }
+            });
+            renderizarBotoesCategorias();
+            renderizarProdutosLoja();
+            atualizarResumoCarrinho();
         }
 
         function renderizarBotoesCategorias() {
             const navContainer = document.getElementById("botoesCategorias");
             navContainer.innerHTML = "";
+            const categorias = getCategoriasDisponiveis();
 
-            categoriasDisponiveis.forEach(cat => {
+            categorias.forEach(cat => {
                 const btn = document.createElement("button");
-                btn.className = `btn-categoria ${cat === categoriaFiltroAtual ? 'ativo' : ''}`;
+                btn.className = `btn-categoria ${cat === state.categoriaAtual ? 'ativo' : ''}`;
                 btn.innerText = cat;
                 btn.onclick = () => {
-                    categoriaFiltroAtual = cat;
-                    renderizarBotoesCategorias();
-                    renderizarProdutos();
+                    state.categoriaAtual = cat;
+                    renderizarBotoesCategorias(); // atualiza classe ativa
+                    renderizarProdutosLoja();
                 };
                 navContainer.appendChild(btn);
             });
         }
 
-        function renderizarProdutos() {
+        function renderizarProdutosLoja() {
             const container = document.getElementById("containerProdutos");
             container.innerHTML = "";
+            const categorias = getCategoriasDisponiveis();
 
-            const categoriasParaExibir = categoriaFiltroAtual === "Todos"
-                ? categoriasDisponiveis.filter(c => c !== "Todos")
-                : [categoriaFiltroAtual];
+            const categoriasParaExibir = state.categoriaAtual === "Todos"
+                ? categorias.filter(c => c !== "Todos")
+                : [state.categoriaAtual];
 
             categoriasParaExibir.forEach(categoria => {
-                const produtosDaCategoria = produtos.filter(p => p.categoria === categoria);
+                const produtosDaCategoria = state.produtos.filter(p => p.categoria === categoria);
 
                 if (produtosDaCategoria.length > 0) {
                     const secao = document.createElement("section");
@@ -779,7 +855,7 @@
                     grid.className = "produtos-grid";
 
                     produtosDaCategoria.forEach(p => {
-                        const qtd = carrinho[p.id] || 0;
+                        const qtd = state.carrinho[p.id] || 0;
                         const indisponivel = p.estoque <= 0;
                         const semEstoqueParaAdicionar = qtd >= p.estoque;
 
@@ -792,17 +868,9 @@
                                 <div class="info">
                                     <div>
                                         <div class="nome">${p.nome}</div>
-                                        <div class="preco">R$ ${p.preco.toFixed(2).replace('.', ',')}</div>
+                                        <div class="preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
                                         <div class="info-estoque ${indisponivel ? 'alerta' : ''}">
                                             ${indisponivel ? '⚠️ Indisponível' : `Estoque: ${p.estoque} unid.`}
-                                        </div>
-
-                                        <!-- Painel visual para alteração rápida de estoque pelo dono -->
-                                        <div class="controle-estoque-admin">
-                                            <span style="font-size: 0.8rem; font-weight: bold;">Estoque do Item:</span><br>
-                                            <button class="btn-admin-estoque" onclick="alterarEstoqueManual(${p.id}, -1)">-</button>
-                                            <strong style="font-size: 0.9rem;">${p.estoque}</strong>
-                                            <button class="btn-admin-estoque" onclick="alterarEstoqueManual(${p.id}, 1)">+</button>
                                         </div>
                                     </div>
 
@@ -823,36 +891,31 @@
         }
 
         function alterarQuantidade(idProduto, valor) {
-            const produto = produtos.find(p => p.id === idProduto);
+            const produto = state.produtos.find(p => p.id === idProduto);
             if (!produto) return;
 
-            let qtdAtual = carrinho[idProduto] || 0;
+            let qtdAtual = state.carrinho[idProduto] || 0;
             let novaQtd = qtdAtual + valor;
 
             if (valor > 0 && novaQtd > produto.estoque) {
-                mostrarNotificacao(`⚠️ Quantidade máxima disponível em estoque: ${produto.estoque} unidades.`);
+                mostrarNotificacao(`⚠️ Apenas ${produto.estoque} unidades disponíveis!`, false);
                 return;
             }
+            if (novaQtd < 0) novaQtd = 0;
 
-            if (novaQtd < 0) {
-                novaQtd = 0;
-            }
-
-            carrinho[idProduto] = novaQtd;
-
-            // Recarrega os botões de controle do card para atualizar se o botão + deve travar
-            renderizarProdutos();
-            atualizarResumo();
+            state.carrinho[idProduto] = novaQtd;
+            renderizarProdutosLoja();
+            atualizarResumoCarrinho();
         }
 
-        function atualizarResumo() {
+        function atualizarResumoCarrinho() {
             let html = "";
             let total = 0;
             let totalItens = 0;
             let temItens = false;
 
-            produtos.forEach(p => {
-                const qtd = carrinho[p.id] || 0;
+            state.produtos.forEach(p => {
+                const qtd = state.carrinho[p.id] || 0;
                 if (qtd > 0) {
                     temItens = true;
                     totalItens += qtd;
@@ -880,27 +943,8 @@
         function toggleCarrinho() {
             const painel = document.getElementById("painelResumo");
             const btn = document.getElementById("btnToggleCarrinho");
-            
             painel.classList.toggle("recolhido");
-            
-            if (painel.classList.contains("recolhido")) {
-                btn.innerText = "Ver Itens ▲";
-            } else {
-                btn.innerText = "Ocultar Itens ▼";
-            }
-        }
-
-        function mostrarNotificacao(texto) {
-            const elemento = document.getElementById("notificacao");
-            if (texto) {
-                elemento.innerText = texto;
-            } else {
-                elemento.innerText = "⚠️ Selecione pelo menos um produto antes de enviar!";
-            }
-            elemento.style.display = "block";
-            setTimeout(() => {
-                elemento.style.display = "none";
-            }, 3500);
+            btn.innerText = painel.classList.contains("recolhido") ? "Ver Itens ▲" : "Ocultar Itens ▼";
         }
 
         function enviarWhatsApp() {
@@ -908,8 +952,8 @@
             let total = 0;
             let temItens = false;
 
-            produtos.forEach(p => {
-                const qtd = carrinho[p.id] || 0;
+            state.produtos.forEach(p => {
+                const qtd = state.carrinho[p.id] || 0;
                 if (qtd > 0) {
                     temItens = true;
                     const subtotal = p.preco * qtd;
@@ -919,21 +963,227 @@
             });
 
             if (!temItens) {
-                mostrarNotificacao();
+                mostrarNotificacao("⚠️ Selecione pelo menos um produto antes de enviar!", false);
                 return;
             }
 
             mensagem += `%0A💰 *Total do Pedido: R$ ${total.toFixed(2).replace('.', ',')}*`;
-
             window.open(`https://wa.me/${numeroWhatsApp}?text=${mensagem}`, '_blank');
         }
 
+        // ==========================================
+        // LÓGICA DE AUTENTICAÇÃO (MÉTODO DOS 3 CLIQUES)
+        // ==========================================
+
+        function contarCliquesTitulo() {
+            state.cliquesTitulo++;
+            if (state.timerCliques) clearTimeout(state.timerCliques);
+
+            state.timerCliques = setTimeout(() => {
+                state.cliquesTitulo = 0;
+            }, 1200);
+
+            if (state.cliquesTitulo >= 3) {
+                state.cliquesTitulo = 0;
+                abrirModalAuth();
+            }
+        }
+
+        function abrirModalAuth() {
+            // Se já logou antes na mesma sessão (recarregar página perde, pois é em-memória)
+            if (sessionStorage.getItem("adminAutenticado") === "true") {
+                abrirAdminDashboard();
+            } else {
+                document.getElementById("modalAdminAuth").style.display = "flex";
+                document.getElementById("inputSenhaAdmin").focus();
+            }
+        }
+
+        function fecharModalAuth() {
+            document.getElementById("modalAdminAuth").style.display = "none";
+            document.getElementById("inputSenhaAdmin").value = "";
+        }
+
+        function tratarTeclaSenha(e) {
+            if (e.key === 'Enter') validarSenhaAdmin();
+        }
+
+        function validarSenhaAdmin() {
+            const senhaDigitada = document.getElementById("inputSenhaAdmin").value;
+            if (senhaDigitada === senhaAdmin) {
+                sessionStorage.setItem("adminAutenticado", "true");
+                fecharModalAuth();
+                abrirAdminDashboard();
+            } else {
+                mostrarNotificacao("❌ Senha incorreta!", false);
+                document.getElementById("inputSenhaAdmin").value = "";
+            }
+        }
+
+        // ==========================================
+        // LÓGICA DO DASHBOARD ADMINISTRATIVO (CRM)
+        // ==========================================
+
+        function abrirAdminDashboard() {
+            document.getElementById("storefrontView").style.display = "none";
+            document.getElementById("adminDashboard").style.display = "block";
+            document.body.classList.add("admin-mode");
+            renderizarTabelaAdmin();
+        }
+
+        function fecharAdminDashboard() {
+            document.getElementById("adminDashboard").style.display = "none";
+            document.getElementById("storefrontView").style.display = "block";
+            document.body.classList.remove("admin-mode");
+            // Atualiza a loja com as possíveis mudanças feitas no CRM
+            initStorefront(); 
+        }
+
+        function renderizarTabelaAdmin() {
+            const tbody = document.getElementById("tabelaProdutosBody");
+            tbody.innerHTML = "";
+
+            if (state.produtos.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding: 30px;">Nenhum produto cadastrado.</td></tr>`;
+                return;
+            }
+
+            state.produtos.forEach(p => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <img src="${p.imagem}" class="admin-prod-img" onerror="this.src='https://placehold.co/50x50/cccccc/333333?text=Img'">
+                        </td>
+                        <td style="font-weight: 600;">${p.nome}</td>
+                        <td>${p.categoria}</td>
+                        <td style="color:#11813d; font-weight:bold;">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</td>
+                        <td>
+                            <span style="padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.9rem; background: ${p.estoque > 0 ? '#c6f6d5; color: #22543d;' : '#fed7d7; color: #822727;'}">
+                                ${p.estoque} unid.
+                            </span>
+                        </td>
+                        <td>
+                            <div style="display:flex; gap: 8px;">
+                                <button class="btn-admin btn-admin-edit" onclick="editarProduto(${p.id})">✏️ Editar</button>
+                                <button class="btn-admin btn-admin-danger" onclick="excluirProduto(${p.id})">🗑️ Excluir</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // --- FUNÇÕES DO MODAL DE PRODUTO ---
+        
+        function preencherDatalistCategorias() {
+            const datalist = document.getElementById("listaCategoriasForm");
+            datalist.innerHTML = "";
+            const categorias = getCategoriasDisponiveis().filter(c => c !== "Todos");
+            categorias.forEach(cat => {
+                datalist.innerHTML += `<option value="${cat}">`;
+            });
+        }
+
+        function abrirModalProduto() {
+            document.getElementById("modalProdutoTitulo").innerText = "➕ Adicionar Novo Produto";
+            document.getElementById("formProduto").reset();
+            document.getElementById("formProdId").value = "";
+            preencherDatalistCategorias();
+            document.getElementById("modalProdutoForm").style.display = "flex";
+        }
+
+        function editarProduto(id) {
+            const p = state.produtos.find(prod => prod.id === id);
+            if (!p) return;
+
+            document.getElementById("modalProdutoTitulo").innerText = "✏️ Editar Produto";
+            document.getElementById("formProdId").value = p.id;
+            document.getElementById("formProdNome").value = p.nome;
+            document.getElementById("formProdCategoria").value = p.categoria;
+            document.getElementById("formProdPreco").value = p.preco;
+            document.getElementById("formProdEstoque").value = p.estoque;
+            document.getElementById("formProdImagem").value = p.imagem;
+            
+            preencherDatalistCategorias();
+            document.getElementById("modalProdutoForm").style.display = "flex";
+        }
+
+        function fecharModalProduto() {
+            document.getElementById("modalProdutoForm").style.display = "none";
+        }
+
+        function salvarProduto(e) {
+            e.preventDefault(); // Impede o reload da página
+
+            const idField = document.getElementById("formProdId").value;
+            const nome = document.getElementById("formProdNome").value.trim();
+            const categoria = document.getElementById("formProdCategoria").value.trim();
+            const preco = parseFloat(document.getElementById("formProdPreco").value);
+            const estoque = parseInt(document.getElementById("formProdEstoque").value, 10);
+            const imagem = document.getElementById("formProdImagem").value.trim();
+
+            if (idField === "") {
+                // CRIAR NOVO
+                const novoId = state.produtos.length > 0 ? Math.max(...state.produtos.map(p => p.id)) + 1 : 1;
+                state.produtos.push({ id: novoId, nome, categoria, preco, estoque, imagem });
+                state.carrinho[novoId] = 0; // Inicializa no carrinho
+                mostrarNotificacao("✅ Produto criado com sucesso!", true);
+            } else {
+                // ATUALIZAR EXISTENTE
+                const idNum = parseInt(idField, 10);
+                const index = state.produtos.findIndex(p => p.id === idNum);
+                if (index !== -1) {
+                    state.produtos[index] = { id: idNum, nome, categoria, preco, estoque, imagem };
+                    
+                    // Ajusta o carrinho se o estoque foi reduzido para menos do que já tem no carrinho
+                    if ((state.carrinho[idNum] || 0) > estoque) {
+                        state.carrinho[idNum] = estoque;
+                    }
+                    mostrarNotificacao("✅ Produto atualizado!", true);
+                }
+            }
+
+            fecharModalProduto();
+            renderizarTabelaAdmin(); // Atualiza a tabela do dashboard
+        }
+
+        function excluirProduto(id) {
+            // Em vez de alert ou confirm bloqueante (regra do sistema), usamos um visual
+            // Para simplificar no HTML em 1 arquivo, exclui direto com notificação reversível visualmente (ou só exclui).
+            // Vamos apenas excluir para manter a funcionalidade fluida sem usar o confirm().
+            
+            state.produtos = state.produtos.filter(p => p.id !== id);
+            delete state.carrinho[id];
+            
+            mostrarNotificacao("🗑️ Produto excluído.", true);
+            renderizarTabelaAdmin();
+        }
+
+        // ==========================================
+        // UTILITÁRIOS GERAIS
+        // ==========================================
+
+        function mostrarNotificacao(texto, sucesso = false) {
+            const elemento = document.getElementById("notificacao");
+            elemento.innerText = texto;
+            
+            if (sucesso) {
+                elemento.classList.add("sucesso");
+            } else {
+                elemento.classList.remove("sucesso");
+            }
+
+            elemento.style.display = "block";
+            setTimeout(() => {
+                elemento.style.display = "none";
+            }, 3000);
+        }
+
+        // Inicia a loja ao carregar a página
         window.onload = function() {
-            renderizarBotoesCategorias();
-            renderizarProdutos();
-            atualizarResumo();
+            initStorefront();
         };
+
     </script>
 </body>
-
 </html>
