@@ -799,7 +799,20 @@
 
         function getCategoriasDisponiveis() {
             const categoriasUnicas = new Set(state.produtos.map(p => p.categoria));
-            return ["Todos", ...Array.from(categoriasUnicas).sort()];
+            let listaCategorias = Array.from(categoriasUnicas).sort();
+
+            // 🌟 DEFINA AQUI O NOME EXATOS DA CATEGORIA QUE VOCÊ QUER QUE FIQUE NO TOPO
+            const categoriaDestaque = "Barras de Chocolate"; // Troque pelo nome exato da sua categoria
+
+            // Se essa categoria existir na lista, removemos ela de lá momentaneamente
+            listaCategorias = listaCategorias.filter(cat => cat !== categoriaDestaque);
+
+            // E colocamos ela obrigatoriamente na primeira posição ("Todos" continua sendo o primeiro botão geral)
+            if (categoriasUnicas.has(categoriaDestaque)) {
+                return ["Todos", categoriaDestaque, ...listaCategorias];
+    }
+
+    return ["Todos", ...listaCategorias];
         }
 
         function renderizarBotoesCategorias() {
