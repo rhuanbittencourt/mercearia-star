@@ -55,7 +55,7 @@
         }
 
         header p {
-            font-size: 1.8rem;
+            font-size: 1.4rem;
             opacity: 0.7;
         }
 
@@ -63,17 +63,18 @@
             display: flex;
             gap: 10px;
             overflow-x: auto;
-            padding-bottom: 10px;
+            padding-bottom: 20px;
             margin-bottom: 25px;
-            scrollbar-width: thin;
+            
         }
 
         .categorias-nav::-webkit-scrollbar {
             height: 4px;
+            
         }
 
         .categorias-nav::-webkit-scrollbar-thumb {
-            background: #cbd5e0;
+            background: #FFD21D;
             border-radius: 4px;
         }
 
@@ -100,7 +101,7 @@
             background: #33322D;
             color: white;
             border-color: #FFD21D;
-            box-shadow: 0 4px 10px rgba(31, 180, 88, 0.3);
+            box-shadow: 0 4px 10px rgba(234, 238, 16, 0.3);
         }
 
         .secao-categoria {
@@ -221,7 +222,7 @@
             width: 32px;
             height: 32px;
             border: none;
-            background: #007bff;
+            background: #33322D;
             color: white;
             font-size: 1.1rem;
             font-weight: bold;
@@ -259,7 +260,7 @@
             padding: 15px 20px;
             border-radius: 20px 20px 0 0;
             box-shadow: 0 -8px 25px rgba(0, 0, 0, 0.15);
-            border-top: 4px solid #25D366;
+            border-top: 4px solid #FFD21D;
             transition: transform 0.3s ease;
         }
 
@@ -589,6 +590,7 @@
                 grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
                 gap: 12px;
             }
+
             .card .img-container { height: 120px; }
             .card .nome { font-size: 0.95rem; }
             .card .preco { font-size: 1.05rem; }
@@ -605,8 +607,11 @@
         <header id="mainHeader">
             <h1 onclick="contarCliquesTitulo()" style="cursor: pointer; user-select: none;" title="Clique 3x rapidamente para abrir o painel admin">
                 Mercearia Star
-            </h1>
-            <p>Faça seu pedido que levo até você!</p>
+                </h1>
+                <p>Faça seu pedido que levo até você!</p>
+                
+                <!-- 🟢 ADICIONE ESTA LINHA AQUI -->
+                <div id="statusLoja" style="margin-top: 12px; font-weight: 700; font-size: 1rem; display: inline-block; padding: 6px 16px; border-radius: 20px;">Verificando horário...</div>
         </header>
 
         <div class="container">
@@ -639,6 +644,7 @@
                 </div>
 
                 <button class="btn-whatsapp" onclick="enviarWhatsApp()">
+                    <img src="imagens/icone-zap.svg" alt="" width="30px">
                     Enviar Pedido no WhatsApp
                 </button>
             </div>
@@ -747,6 +753,15 @@
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 
     <script>
+
+
+        // Chame a função assim que o script carregar
+        verificarHorarioLoja();
+
+        // E configure para checar a cada 1 minuto caso o cliente deixe o site aberto
+        setInterval(verificarHorarioLoja, 60000);
+
+
         const numeroWhatsApp = "5522988098858";
         const senhaAdmin = "1234";
 
@@ -1154,6 +1169,39 @@
                 elemento.style.display = "none";
             }, 3000);
         }
+
+
+
+
+
+
+
+
+        function verificarHorarioLoja() {
+    const agora = new Date();
+    const hora = agora.getHours();
+    const minuto = agora.getMinutes();
+    
+    // Transforma a hora atual em minutos totais do dia para facilitar a comparação
+    const minutosAtuais = (hora * 60) + minuto;
+    
+    // Horário de funcionamento: 07:00 (420 min) até 21:30 (1290 min)
+    const abertura = 7 * 60;       // 07:00 = 420 minutos
+    const fechamento = (21 * 60) + 30; // 21:30 = 1290 minutos
+
+    const badgeStatus = document.getElementById("statusLoja");
+    if (!badgeStatus) return;
+
+    if (minutosAtuais >= abertura && minutosAtuais <= fechamento) {
+        badgeStatus.innerHTML = "🟢 Aberto agora (Fecha às 21:30)";
+        badgeStatus.style.background = "#28a745";
+        badgeStatus.style.color = "#ffffff";
+    } else {
+        badgeStatus.innerHTML = "🔴 Fechado no momento (Abriremos às 07:00)";
+        badgeStatus.style.background = "#dc3545";
+        badgeStatus.style.color = "#ffffff";
+    }
+}
 
     </script>
 </body>
