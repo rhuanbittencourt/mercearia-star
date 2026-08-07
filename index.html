@@ -863,7 +863,9 @@
             }
 
             categoriasParaExibir.forEach(categoria => {
-                const produtosDaCategoria = state.produtos.filter(p => p.categoria === categoria);
+                const produtosDaCategoria = state.produtos
+                    .filter(p => p.categoria === categoria)
+                    .sort((a, b) => (b.estoque > 0) - (a.estoque > 0));
 
                 if (produtosDaCategoria.length > 0) {
                     const secao = document.createElement("section");
