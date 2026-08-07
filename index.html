@@ -862,12 +862,42 @@
                 return;
             }
 
-            categoriasParaExibir.forEach(categoria => {
-                const produtosDaCategoria = state.produtos
-                    .filter(p => p.categoria === categoria)
-                    .sort((a, b) => (b.estoque > 0) - (a.estoque > 0));
+            // Função auxiliar interna para não repetir o HTML do card
+            const gerarCard = (p) => {
+                const qtd = state.carrinho[p.id] || 0;
+                const indisponivel = p.estoque <= 0;
+                const semEstoqueParaAdicionar = qtd >= p.estoque;
 
-                if (produtosDaCategoria.length > 0) {
+                return `
+                    <div class="card ${indisponivel ? 'indisponivel' : ''}">
+                        <div class="img-container">
+                            ${indisponivel ? '<div class="selo-esgotado">Esgotado</div>' : ''}
+                            <img src="${p.imagem}" alt="${p.nome}" onerror="this.src='https://placehold.co/300x220/cccccc/333333?text=${encodeURIComponent(p.nome)}'">
+                        </div>
+                        <div class="info">
+                            <div>
+                                <div class="nome">${p.nome}</div>
+                                <div class="preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
+                                <div class="info-estoque ${indisponivel ? 'alerta' : ''}">
+                                    ${indisponivel ? '⚠️ Indisponível' : `Estoque: ${p.estoque} unid.`}
+                                </div>
+                            </div>
+                            <div class="controle">
+                                <button onclick="alterarQuantidade('${p.id}', -1)" ${qtd === 0 ? 'disabled style="opacity: 0.5;"' : ''}>-</button>
+                                <span class="quantidade" id="qtd-${p.id}">${qtd}</span>
+                                <button onclick="alterarQuantidade('${p.id}', 1)" ${semEstoqueParaAdicionar || indisponivel ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>+</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            };
+
+            // ETAPA 1: RENDERIZAR AS CATEGORIAS APENAS COM PRODUTOS EM ESTOQUE
+            categoriasParaExibir.forEach(categoria => {
+                // Filtra para pegar apenas produtos com estoque > 0
+                const produtosEmEstoque = state.produtos.filter(p => p.categoria === categoria && p.estoque > 0);
+
+                if (produtosEmEstoque.length > 0) {
                     const secao = document.createElement("section");
                     secao.className = "secao-categoria";
 
@@ -879,40 +909,41 @@
                     const grid = document.createElement("div");
                     grid.className = "produtos-grid";
 
-                    produtosDaCategoria.forEach(p => {
-                        const qtd = state.carrinho[p.id] || 0;
-                        const indisponivel = p.estoque <= 0;
-                        const semEstoqueParaAdicionar = qtd >= p.estoque;
-
-                        grid.innerHTML += `
-                            <div class="card ${indisponivel ? 'indisponivel' : ''}">
-                                <div class="img-container">
-                                    ${indisponivel ? '<div class="selo-esgotado">Esgotado</div>' : ''}
-                                    <img src="${p.imagem}" alt="${p.nome}" onerror="this.src='https://placehold.co/300x220/cccccc/333333?text=${encodeURIComponent(p.nome)}'">
-                                </div>
-                                <div class="info">
-                                    <div>
-                                        <div class="nome">${p.nome}</div>
-                                        <div class="preco">R$ ${parseFloat(p.preco).toFixed(2).replace('.', ',')}</div>
-                                        <div class="info-estoque ${indisponivel ? 'alerta' : ''}">
-                                            ${indisponivel ? '⚠️ Indisponível' : `Estoque: ${p.estoque} unid.`}
-                                        </div>
-                                    </div>
-
-                                    <div class="controle">
-                                        <button onclick="alterarQuantidade('${p.id}', -1)" ${qtd === 0 ? 'disabled style="opacity: 0.5;"' : ''}>-</button>
-                                        <span class="quantidade" id="qtd-${p.id}">${qtd}</span>
-                                        <button onclick="alterarQuantidade('${p.id}', 1)" ${semEstoqueParaAdicionar || indisponivel ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>+</button>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
+                    produtosEmEstoque.forEach(p => {
+                        grid.innerHTML += gerarCard(p);
                     });
 
                     secao.appendChild(grid);
                     container.appendChild(secao);
                 }
             });
+
+            // ETAPA 2: RENDERIZAR TODOS OS PRODUTOS ESGOTADOS LÁ NO FINAL
+            // Pega produtos esgotados que pertencem às categorias que o usuário está visualizando agora
+            const produtosEsgotados = state.produtos.filter(p => categoriasParaExibir.includes(p.categoria) && p.estoque <= 0);
+
+            if (produtosEsgotados.length > 0) {
+                const secaoEsgotados = document.createElement("section");
+                secaoEsgotados.className = "secao-categoria";
+                secaoEsgotados.style.marginTop = "50px"; // Espaço extra para separar bem do resto da loja
+
+                const tituloEsgotados = document.createElement("h2");
+                tituloEsgotados.className = "titulo-categoria";
+                tituloEsgotados.innerText = "🚫 Produtos Esgotados";
+                tituloEsgotados.style.color = "#a0aec0"; // Uma cor mais neutra
+                tituloEsgotados.style.borderBottomColor = "#4a5568";
+                secaoEsgotados.appendChild(tituloEsgotados);
+
+                const gridEsgotados = document.createElement("div");
+                gridEsgotados.className = "produtos-grid";
+
+                produtosEsgotados.forEach(p => {
+                    gridEsgotados.innerHTML += gerarCard(p);
+                });
+
+                secaoEsgotados.appendChild(gridEsgotados);
+                container.appendChild(secaoEsgotados);
+            }
         }
 
         function alterarQuantidade(idProduto, valor) {
